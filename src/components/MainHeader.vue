@@ -1,0 +1,71 @@
+<template>
+  <header class="main-header">
+    <div class="header-content">
+      <el-input size="small"
+                class="search m-r-10"
+                placeholder="请输入内容"
+                v-model="keywords">
+        <el-button slot="append"
+                   icon="el-icon-search"></el-button>
+      </el-input>
+      <el-button size='small'
+                 type='primary'>提问</el-button>
+      <div class="userInfo"
+           v-if="!isLogin">
+        <router-link :to="{name:'signup'}">登录</router-link>
+      </div>
+      <div class="userInfo"
+           v-if="isLogin">
+        <i class="el-icon-bell m-r-40 icon-item"></i>
+        <i class="el-icon-message m-r-40 icon-item"></i>
+        <el-dropdown placement="bottom"
+                     trigger="click"
+                     class="hand-click">
+          <span>
+            rz
+            <img class="avatar"
+                 src="../assets/imgs/logo.png"
+                 alt="" />
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>
+              <div @click="goToPersonalPage">
+                <span class="el el-icon-fakezhihu-person"></span>
+                我的主页
+              </div>
+            </el-dropdown-item>
+            <el-dropdown-item divided>
+              <i class="el-icon-setting">设置</i>
+            </el-dropdown-item>
+            <el-dropdown-item divided>
+              <div @click="logout">
+                <span class="el el-icon-fakezhihu-poweroff"></span>
+                退出
+              </div>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+    </div>
+  </header>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+      activeIndex: '1',
+      keywords: '',
+      isLogin: true
+    };
+  },
+  methods: {
+    handleSelect (key) {
+      console.log(key);
+    },
+    goToPersonalPage () {
+      console.log('跳转到用户首页');
+    }
+  },
+};
+</script>
