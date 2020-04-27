@@ -1,5 +1,6 @@
-<<<<<<< HEAD
-# todolist
+# fakezhihu
+
+开发一个类知乎的网站
 
 ## Project setup
 ```
@@ -24,6 +25,3 @@ npm run lint
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 =======
-# fakezhihu
-开发一个类知乎的网站
->>>>>>> e2456e1ef8f700ae94a4013838861509cd934a9e
