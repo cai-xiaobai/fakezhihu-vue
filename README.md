@@ -25,3 +25,5 @@ npm run lint
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 =======
+
+2020/4/27 完成首页、登录注册页及表单验证。

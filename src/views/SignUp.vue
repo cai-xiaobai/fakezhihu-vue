@@ -25,7 +25,10 @@ export default {
 </script>
 
 <style>
-body {
+.signup {
+  height: 100%;
+  position: fixed;
+  width: 100%;
   background-color: cornflowerblue;
   background-image: url("../assets/imgs/LoginPage.png");
 }

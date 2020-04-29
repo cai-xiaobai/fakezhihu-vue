@@ -20,17 +20,31 @@
             <el-input placeholder="请输入邮箱"
                       v-model="registerForm.email" />
           </el-form-item>
-          <el-form-item prop='password'
+          <!-- <el-form-item prop='password'
                         class="no-label">
             <el-input type="password"
                       placeholder="请输入密码"
                       v-model="registerForm.password" />
           </el-form-item>
-          <el-form-item prop='password'
+          <el-form-item prop='passwordEnsure'
                         class="no-label">
             <el-input type="password"
                       placeholder="请再次输入密码"
                       v-model="registerForm.passwordEnsure" />
+          </el-form-item> -->
+          <el-form-item prop="pass"
+                        class="no-label">
+            <el-input type="password"
+                      v-model="registerForm.pass"
+                      placeholder="请输入密码"
+                      autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item prop="checkPass"
+                        class="no-label">
+            <el-input type="password"
+                      placeholder="请再次输入密码"
+                      v-model="registerForm.checkPass"
+                      autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item prop='submit'>
             <el-button class="submit-btn registerBtn"
@@ -99,21 +113,23 @@
 </template>
 
 <script>
+// import axios from 'axios';
+import { post } from '../../axios/apis';
+import md5 from 'md5';
+
 export default {
   data () {
-    const validatePass = (rule, value, callback) => { //注册初次密码验证
+    var validatePass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入密码'));
-      } else if (!this.pwdReg.test(value)) {
-        callback(new Error('用户密码需由数字/大写字母/小写字母/标点符号组成，8位以上'));
       } else {
-        if (this.registerForm.passwordEnsure !== '') {
-          this.$ref.registerForm.validateField('passwordEnsure');
+        if (this.registerForm.checkPass !== '') {
+          this.$refs.registerForm.validateField('checkPass');
         }
         callback();
       }
     };
-    const validatePassEnsure = (rule, value, callback) => {  //注册第二次密码验证
+    var validatePass2 = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请再次输入密码'));
       } else if (value !== this.registerForm.password) {
@@ -135,22 +151,34 @@ export default {
         },
       },
       registerForm: { //注册表单数据
+        name: '',
         email: '',
-        password: '',
-        passwordEnsure: '',
+        pass: '',
+        checkPass: '',
+        // password: '',
+        // passwordEnsure: '',
       },
       registerRules: { //注册表单规则
+        name: [     //email规则
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+        ],
         email: [     //email规则
           { required: true, message: '请输入邮箱', trigger: 'blur' },
           { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] },
         ],
-        password: [  //初次密码规则
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { vaildator: validatePass, trigger: ['blur'] },
+        // password: [  //初次密码规则
+        //   { required: true, message: '请输入密码', trigger: 'blur' },
+        //   { vaildator: validatePass, trigger: 'blur' },
+        // ],
+        // passwordEnsure: [  //二次密码规则
+        //   { required: true, message: '请输入密码', trigger: 'blur' },
+        //   { vaildator: validatePassEnsure, trigger: 'blur' },
+        // ],
+        pass: [
+          { validator: validatePass, trigger: 'blur' }
         ],
-        passwordEnsure: [  //二次密码规则
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { vaildator: validatePassEnsure, trigger: ['blur'] },
+        checkPass: [
+          { validator: validatePass2, trigger: 'blur' }
         ],
       },
       loginForm: {
@@ -168,11 +196,25 @@ export default {
     };
   },
   methods: {
+    async register () {
+      await post('/users/create', {
+        loginName: this.registerForm.name,
+        pwd: md5(this.registerForm.pass),
+        email: this.registerForm.email,
+      }).then((res) => {
+        if (res.status === 200) {
+          this.$Message.success('注册成功');
+          this.$router.push({ name: 'home' });
+        } else {
+          this.$Message.error(res.data.msg);
+        }
+      });
+    },
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.nowStatus === 'register') {
-            console.log('触发注册方法');
+            this.register();
           } else {
             console.log('触发登录方法');
           }
@@ -201,7 +243,7 @@ export default {
 .no-label {
   width: 320px;
   height: 55px;
-  margin-top: -10px;
+  margin-top: 10px;
 }
 .others,
 .register-footer {
