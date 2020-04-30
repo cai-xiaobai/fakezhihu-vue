@@ -7,6 +7,7 @@
       <div class="register"
            v-show="nowStatus === 'register' ">
         <el-form :model="registerForm"
+                 status-icon
                  :rules="registerRules"
                  ref="registerForm"
                  label-width="0px">
@@ -20,18 +21,6 @@
             <el-input placeholder="请输入邮箱"
                       v-model="registerForm.email" />
           </el-form-item>
-          <!-- <el-form-item prop='password'
-                        class="no-label">
-            <el-input type="password"
-                      placeholder="请输入密码"
-                      v-model="registerForm.password" />
-          </el-form-item>
-          <el-form-item prop='passwordEnsure'
-                        class="no-label">
-            <el-input type="password"
-                      placeholder="请再次输入密码"
-                      v-model="registerForm.passwordEnsure" />
-          </el-form-item> -->
           <el-form-item prop="pass"
                         class="no-label">
             <el-input type="password"
@@ -113,7 +102,6 @@
 </template>
 
 <script>
-// import axios from 'axios';
 import { post } from '../../axios/apis';
 import md5 from 'md5';
 
@@ -132,7 +120,7 @@ export default {
     var validatePass2 = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请再次输入密码'));
-      } else if (value !== this.registerForm.password) {
+      } else if (value !== this.registerForm.pass) {
         callback(new Error('两次输入密码不一致!'));
       } else {
         callback();
@@ -155,8 +143,6 @@ export default {
         email: '',
         pass: '',
         checkPass: '',
-        // password: '',
-        // passwordEnsure: '',
       },
       registerRules: { //注册表单规则
         name: [     //email规则
@@ -166,14 +152,6 @@ export default {
           { required: true, message: '请输入邮箱', trigger: 'blur' },
           { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] },
         ],
-        // password: [  //初次密码规则
-        //   { required: true, message: '请输入密码', trigger: 'blur' },
-        //   { vaildator: validatePass, trigger: 'blur' },
-        // ],
-        // passwordEnsure: [  //二次密码规则
-        //   { required: true, message: '请输入密码', trigger: 'blur' },
-        //   { vaildator: validatePassEnsure, trigger: 'blur' },
-        // ],
         pass: [
           { validator: validatePass, trigger: 'blur' }
         ],
@@ -197,13 +175,28 @@ export default {
   },
   methods: {
     async register () {
-      await post('/users/create', {
+      await post('/api/users/create', {
         loginName: this.registerForm.name,
         pwd: md5(this.registerForm.pass),
         email: this.registerForm.email,
+      })
+        .then((response) => {
+          console.log(response);
+          if (response.status === 200) {
+            this.$Message.success('注册成功');
+            this.$router.push({ name: 'home' });
+          } else {
+            this.$Message.error(response.data.msg);
+          }
+        });
+    },
+    async login () {
+      await post('/api/users/login', {
+        loginName: this.loginForm.username,
+        pwd: md5(this.loginForm.password),
       }).then((res) => {
         if (res.status === 200) {
-          this.$Message.success('注册成功');
+          this.$Message.success('登录成功');
           this.$router.push({ name: 'home' });
         } else {
           this.$Message.error(res.data.msg);
@@ -216,7 +209,7 @@ export default {
           if (this.nowStatus === 'register') {
             this.register();
           } else {
-            console.log('触发登录方法');
+            this.login();
           }
         } else {
           this.$Message.error('error submit!!!')

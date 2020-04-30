@@ -55,7 +55,7 @@
                          trigger="click"
                          class="hand-click">
               <span class="userAvatar">
-                rz
+                {{this.loginName}}
                 <!-- <img class="avatar"
                      src="../assets/imgs/logo.png"
                      alt="" /> -->
@@ -65,7 +65,7 @@
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item>
                   <div @click="goToPersonalPage">
-                    <span class="el el-icon-fakezhihu-person"></span>
+                    <span class="el-icon-user"></span>
                     我的主页
                   </div>
                 </el-dropdown-item>
@@ -74,7 +74,7 @@
                 </el-dropdown-item>
                 <el-dropdown-item divided>
                   <div @click="logout">
-                    <span class="el el-icon-fakezhihu-poweroff"></span>
+                    <span class="el-icon-switch-button"></span>
                     退出
                   </div>
                 </el-dropdown-item>
@@ -88,12 +88,14 @@
 </template>
 
 <script>
+import { get, post } from '../axios/apis';
 export default {
   data () {
     return {
       activeIndex: '1',
       keywords: '',
-      isLogin: true
+      isLogin: false,
+      loginName: '',
     };
   },
   methods: {
@@ -103,10 +105,33 @@ export default {
     goToPersonalPage () {
       console.log('跳转到用户首页');
     },
-    logout () {
-      console.log('退出');
+    async logout () {
+      await post('/api/users/logot').then((res) => {
+        if (res.status === 200) {
+          this.$Message.success('注销成功');
+          this.loginName = "";
+          this.$router.push({ name: 'signup' });
+        } else {
+          this.$Message.error('注销失败，请稍后再试');
+        }
+      });
+    },
+    async checkLogin () {
+      await get('/api/users/checkLogin').then((res) => {
+        if (res.status === 200) {
+          this.loginName = res.data.loginName
+          this.isLogin = true;
+          // console.log("abcc")
+        } else {
+          this.$router.push({ name: 'signup' });
+          this.isLogin = false;
+        }
+      });
     }
   },
+  mounted () {
+    this.checkLogin();
+  }
 };
 </script>
 
