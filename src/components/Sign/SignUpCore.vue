@@ -33,11 +33,13 @@
             <el-input type="password"
                       placeholder="请再次输入密码"
                       v-model="registerForm.checkPass"
+                      @keyup.enter.native="submitForm('registerForm')"
                       autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item prop='submit'>
             <el-button class="submit-btn registerBtn"
                        type="primary"
+                       @keyup.enter.native="submitForm('registerForm')"
                        @click="submitForm('registerForm')">注册</el-button>
           </el-form-item>
         </el-form>
@@ -66,6 +68,7 @@
                         class="no-label">
             <el-input type="password"
                       placeholder="请输入密码"
+                      @keyup.enter.native="submitForm('loginForm')"
                       v-model="loginForm.password" />
           </el-form-item>
           <div class="others">
@@ -79,6 +82,7 @@
           <el-form-item prop="submit">
             <el-button class="submit-btn"
                        type="primary"
+                       @keyup.enter.native="submitForm('loginForm')"
                        @click="submitForm('loginForm')">登录</el-button>
           </el-form-item>
         </el-form>

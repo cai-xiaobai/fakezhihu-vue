@@ -106,7 +106,7 @@ export default {
       console.log('跳转到用户首页');
     },
     async logout () {
-      await post('/api/users/logot').then((res) => {
+      await post('/api/users/logout').then((res) => {
         if (res.status === 200) {
           this.$Message.success('注销成功');
           this.loginName = "";
@@ -121,7 +121,6 @@ export default {
         if (res.status === 200) {
           this.loginName = res.data.loginName
           this.isLogin = true;
-          // console.log("abcc")
         } else {
           this.$router.push({ name: 'signup' });
           this.isLogin = false;
@@ -140,7 +139,7 @@ export default {
   /* width: 1032px; */
   height: 52px;
   padding: 10px;
-  border-bottom: 5px solid black;
+  border-bottom: 5px solid rgb(249, 249, 249);
   margin: 0 auto;
 }
 /* 整体的下划线进行隐藏 */
@@ -155,6 +154,7 @@ export default {
 }
 .m-r-20 {
   height: 54px;
+  margin-left: 40px;
 }
 .search,
 .problemBtn {

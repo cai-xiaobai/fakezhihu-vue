@@ -4,7 +4,7 @@ import Home from '../views/Home.vue'
 import MainList from '../components/MainList.vue'
 import ListItem from '../components/ListItem.vue'
 import SignUp from '../views/SignUp.vue'
-
+import Editor from '../views/Editor.vue'
 Vue.use(VueRouter)
 
 const routes = [{
@@ -24,6 +24,10 @@ const routes = [{
     path: '/signup',
     name: 'signup',
     component: SignUp,
+  }, {
+    path: '/editor/:articleId',
+    name: 'editor',
+    component: Editor,
   }
 
 ]
