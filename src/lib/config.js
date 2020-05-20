@@ -1,0 +1,1 @@
+export const imgDec = 'http://localhost:3000';

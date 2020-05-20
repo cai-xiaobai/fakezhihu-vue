@@ -11,8 +11,10 @@
       <el-col :span="8">
         <div class="icon-item normal-btn"
              v-if="exists.indexOf('article') >= 0">
-          <i class="el-icon-edit-outline big-icon"></i>
-          <p>写文章</p>
+          <router-link :to="{name:'editor',params:{articleId:0}}">
+            <i class="el-icon-edit-outline big-icon"></i>
+            <p>写文章</p>
+          </router-link>
         </div>
       </el-col>
       <el-col :span="8">

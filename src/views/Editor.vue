@@ -14,6 +14,35 @@
                             :content='content'
                             :placeHolder="placeHolder"
                             @updateContent=updateContent />
+          <el-upload v-if="imgUrl === ''"
+                     class="img-upload"
+                     drag
+                     action="api/imgs/upload"
+                     :on-success="uploadSuc"
+                     accept=".jpg,.jpeg,.JPG,.JPEG,.png,.PNG">
+            <i class="el-icon-upload"></i>
+            <div>添加题图</div>
+          </el-upload>
+          <el-upload v-if="imgUrl === ''"
+                     class="img-upload"
+                     drag
+                     action="api/imgs/upload"
+                     :on-success="uploadSuc"
+                     accept=".jpg,.jpeg,.JPG,.JPEG,.png,.PNG">
+            <i class="el-icon-upload"></i>
+            <div>添加题图</div>
+          </el-upload>
+
+          <img v-if="imgUrl !== ''"
+               class="oldImg"
+               :src="imgUrl"
+               @click="$refs.hiddenUpload.click()" />
+          <el-upload class="hidden"
+                     action="api/imgs/upload"
+                     :on-success="uploadSuc"
+                     accept=".jpg,.jpeg,.JPG,.JPEG,.png,.PNG">
+            <div ref="hiddenUpload"></div>
+          </el-upload>
         </div>
       </el-main>
     </el-container>
@@ -25,6 +54,8 @@ import EditorHeader from '@/components/Editor/EditorHeader.vue';
 import RichTextEditor from '@/components/Editor/RichTextEditor.vue';
 import { post } from '../axios/apis';
 import { getCookies } from '../lib/utils.js';
+// eslint-disable-next-line no-unused-vars
+import { imgDec } from '../lib/config.js';
 export default {
   components: {
     EditorHeader,
@@ -36,12 +67,29 @@ export default {
       content: '',
       contentText: '',
       placeHolder: '请输入正文',
+      imgUrl: ''
     };
+  },
+  mounted () {
+    //将富文本的默认图片上传方法改为imgHandler
+    this.$refs.myQuillEditor.quill.getModule('toolbar').addHandeler('image', this.imgHandler);
   },
   methods: {
     updateContent (content, contentText) {
       this.content = content;
       this.contentText = contentText;
+    },
+    imgHandler (image) {
+      if (image) {
+        this.$refs.hiddenUploade.click();
+      }
+    },
+    // eslint-disable-next-line no-unused-vars
+    uploadSuc (response) {
+      // eslint-disable-next-line no-unused-vars
+      const url = '${imgDec}${respinse.fileName}';
+      const fake = '../assets/imgs/logo.png';
+      this.$refs.myQuillEditor.quill.insertEmbed(this.$refs.myQuillEditor.quill.getSelection(), 'image', fake)
     },
     relaseArticles () {
       //发布文章方法
